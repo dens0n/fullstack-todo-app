@@ -1,18 +1,49 @@
+import { useState } from "react";
 import TickIcon from "./TickIcon";
 import ProgressBar from "./ProgressBar";
-export default function ListItem({ task }) {
+import Modal from "./Modal";
+export default function ListItem({ task, getData }) {
+    const [showModal, setShowModal] = useState(false);
+
+    const deleteItem = async () => {
+        try {
+            const response = await fetch(
+                `${import.meta.env.VITE_SERVER_URL}/todos/${task.id}`,
+                {
+                    method: "DELETE",
+                }
+            );
+            if (response.status === 200) {
+                getData();
+            }
+        } catch (err) {
+            console.log(err);
+        }
+    };
     return (
-        <div className="list-item">
+        <li className="list-item">
             <div className="info-container">
                 <TickIcon />
                 <p className="task-title">{task.title}</p>
-                <ProgressBar />
+                <ProgressBar progress={task.progress} />
             </div>
 
             <div className="button-container">
-                <button className="edit">EDIT</button>
-                <button className="delete">DELETE</button>
+                <button className="edit" onClick={() => setShowModal(true)}>
+                    EDIT
+                </button>
+                <button className="delete" onClick={deleteItem}>
+                    DELETE
+                </button>
             </div>
-        </div>
+            {showModal && (
+                <Modal
+                    mode={"edit"}
+                    setShowModal={setShowModal}
+                    task={task}
+                    getData={getData}
+                />
+            )}
+        </li>
     );
 }

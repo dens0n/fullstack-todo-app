@@ -1,15 +1,68 @@
 import { useState } from "react";
-export default function Modal() {
-    const mode = "edit";
-    const handleChange = () => {
-        console.log("changing");
+import { useCookies } from "react-cookie";
+export default function Modal({ mode, setShowModal, task, getData }) {
+    const [cookies, setCookie, removeCookie] = useCookies(null);
+    const editMode = mode === "edit" ? true : false;
+    const [data, setData] = useState({
+        user_email: editMode ? task.user_email : cookies.Email,
+        title: editMode ? task.title : "",
+        progress: editMode ? task.progress : 50,
+        date: editMode ? task.date : new Date(),
+    });
+
+    const postData = async (e) => {
+        e.preventDefault();
+        try {
+            const response = await fetch(
+                `${import.meta.env.VITE_SERVER_URL}/todos/`,
+                {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(data),
+                }
+            );
+            if (response.status === 200) {
+                console.log("Lagt till en todo");
+                setShowModal(false);
+                getData();
+            }
+        } catch (err) {
+            console.log(err);
+        }
+    };
+
+    const editData = async (e) => {
+        e.preventDefault();
+        try {
+            const response = await fetch(
+                `${import.meta.env.VITE_SERVER_URL}/todos/${task.id}`,
+                {
+                    method: "PUT",
+                    headers: { "Content-type": "application/json" },
+                    body: JSON.stringify(data),
+                }
+            );
+            if (response.status === 200) {
+                setShowModal(false);
+                getData();
+            }
+        } catch (err) {
+            console.log(err);
+        }
+    };
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        setData((data) => ({
+            ...data,
+            [name]: value,
+        }));
     };
     return (
         <div className="overlay">
             <div className="modal">
                 <div className="form-title-container">
                     <h3>Let's {mode} you task</h3>
-                    <button>X</button>
+                    <button onClick={() => setShowModal(false)}>X</button>
                 </div>
                 <form>
                     <input
@@ -17,7 +70,8 @@ export default function Modal() {
                         required
                         maxLength={30}
                         placeholder="your task goes here"
-                        name="Title"
+                        name="title"
+                        value={data.title}
                         onChange={handleChange}
                     />
                     <br />
@@ -31,10 +85,14 @@ export default function Modal() {
                         min={0}
                         max={100}
                         name="progress"
-                        value={5}
+                        value={data.progress}
                         onChange={handleChange}
                     />
-                    <input className={mode} type="submit" />
+                    <input
+                        className={mode}
+                        type="submit"
+                        onClick={editMode ? editData : postData}
+                    />
                 </form>
             </div>
         </div>
