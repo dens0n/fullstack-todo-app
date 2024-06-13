@@ -2,6 +2,7 @@ const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
 const { v4: uuid } = require("uuid");
 
+// Get all todos connected to a user
 exports.getTodos = async (req, res) => {
     const { userEmail } = req.params;
     try {
@@ -16,6 +17,7 @@ exports.getTodos = async (req, res) => {
     }
 };
 
+// create a new todo
 exports.createTodo = async (req, res) => {
     const { user_email, title, progress, date } = req.body;
     const id = uuid();
@@ -35,6 +37,7 @@ exports.createTodo = async (req, res) => {
     }
 };
 
+//Edit a todo
 exports.editTodo = async (req, res) => {
     const { id } = req.params;
     const { user_email, title, progress, date } = req.body;
@@ -54,6 +57,7 @@ exports.editTodo = async (req, res) => {
     }
 };
 
+// Delete a todo
 exports.deleteTodo = async (req, res) => {
     const { id } = req.params;
     try {

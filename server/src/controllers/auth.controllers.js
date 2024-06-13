@@ -1,9 +1,10 @@
-const { PrismaClient } = require('@prisma/client');
+const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
-const bcrypt = require('bcrypt');
-const jwt = require('jsonwebtoken');
+const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
 const secret = "your_jwt_secret";
 
+// signup a new account
 exports.signup = async (req, res) => {
     const { email, password } = req.body;
     const hashedPassword = bcrypt.hashSync(password, bcrypt.genSaltSync(10));
@@ -23,6 +24,7 @@ exports.signup = async (req, res) => {
     }
 };
 
+// Log in to an account
 exports.login = async (req, res) => {
     const { email, password } = req.body;
 
