@@ -29,9 +29,10 @@ function App() {
 
     console.log(tasks);
 
-    const sortedTasks = tasks?.sort(
+    /* const sortedTasks = tasks?.sort(
         (a, b) => new Date(a.date) - new Date(b.date)
-    );
+    ); */
+    const sortedTasks = tasks?.sort((a, b) => a.progress - b.progress);
 
     return (
         <div className="app">

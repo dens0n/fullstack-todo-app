@@ -21,9 +21,15 @@ export default function ListItem({ task, getData }) {
         }
     };
     return (
-        <li className="list-item">
+        <li
+            className="list-item"
+            style={{
+                backgroundColor:
+                    task.progress === 100 ? "rgba(120, 181, 45,0.2)" : "",
+            }}
+        >
             <div className="info-container">
-                <TickIcon />
+                <TickIcon progress={task.progress} />
                 <p className="task-title">{task.title}</p>
                 <ProgressBar progress={task.progress} />
             </div>
