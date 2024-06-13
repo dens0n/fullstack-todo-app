@@ -7,6 +7,8 @@ const { v4: uuid } = require("uuid");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const secret = "your_jwt_secret";
+const { PrismaClient } = require("@prisma/client");
+const prisma = new PrismaClient();
 
 app.use(cors());
 app.use(express.json());
@@ -15,12 +17,12 @@ app.use(express.json());
 app.get("/todos/:userEmail", async (req, res) => {
     const { userEmail } = req.params;
     try {
-        /* const todos = await pool.query("SELECT * FROM todos"); */
-        const todos = await pool.query(
-            "SELECT * FROM todos WHERE user_email = $1",
-            [userEmail]
-        );
-        res.json(todos.rows);
+        const todos = await prisma.todo.findMany({
+            where: {
+                userEmail: userEmail,
+            },
+        });
+        res.json(todos);
     } catch (err) {
         console.log(err);
     }
@@ -29,13 +31,17 @@ app.get("/todos/:userEmail", async (req, res) => {
 // create a new todo
 app.post("/todos", async (req, res) => {
     const { user_email, title, progress, date } = req.body;
-    console.log(user_email, title, progress, date);
     const id = uuid();
     try {
-        const newTodo = await pool.query(
-            `INSERT INTO todos (id, user_email, title, progress, date) VALUES($1, $2, $3, $4, $5)`,
-            [id, user_email, title, progress, date]
-        );
+        const newTodo = await prisma.todo.create({
+            data: {
+                id: id,
+                userEmail: user_email,
+                title: title,
+                progress: progress,
+                date: date,
+            },
+        });
         res.json(newTodo);
     } catch (err) {
         console.log(err);
@@ -46,24 +52,30 @@ app.post("/todos", async (req, res) => {
 app.put("/todos/:id", async (req, res) => {
     const { id } = req.params;
     const { user_email, title, progress, date } = req.body;
+    console.log(progress);
     try {
-        const editTodo = await pool.query(
-            "UPDATE todos SET user_email = $1, title = $2, progress = $3, date = $4 WHERE id = $5;",
-            [user_email, title, progress, date, id]
-        );
+        const editTodo = await prisma.todo.update({
+            where: { id: id },
+            data: {
+                userEmail: user_email,
+                title: title,
+                progress: progress,
+                date: date,
+            },
+        });
         res.json(editTodo);
     } catch (err) {
         console.log(err);
     }
 });
 
-//Delete todo
+//Delete a todo
 app.delete("/todos/:id", async (req, res) => {
     const { id } = req.params;
     try {
-        const deleteTodo = await pool.query("DELETE FROM todos WHERE id = $1", [
-            id,
-        ]);
+        const deleteTodo = await prisma.todo.delete({
+            where: { id: id },
+        });
         res.json(deleteTodo);
     } catch (err) {
         console.log(err);
@@ -76,17 +88,17 @@ app.post("/signup", async (req, res) => {
     const hashedPassword = bcrypt.hashSync(password, bcrypt.genSaltSync(10));
 
     try {
-        const signUp = await pool.query(
-            "INSERT INTO users (email, hashed_password) VALUES ($1, $2)",
-            [email, hashedPassword]
-        );
+        const signUp = await prisma.user.create({
+            data: {
+                email: email,
+                hashedPassword: hashedPassword,
+            },
+        });
         const token = jwt.sign({ email }, secret, { expiresIn: "1hr" });
         res.json({ email, token });
     } catch (err) {
         console.log(err);
-        if (err) {
-            res.json({ detail: err.detail });
-        }
+        res.json({ detail: err.message });
     }
 });
 
@@ -95,19 +107,16 @@ app.post("/login", async (req, res) => {
     const { email, password } = req.body;
 
     try {
-        const users = await pool.query("SELECT * FROM users WHERE email = $1", [
-            email,
-        ]);
-        if (!users.rows.length) {
+        const user = await prisma.user.findUnique({
+            where: { email: email },
+        });
+        if (!user) {
             return res.json({ detail: "user does not exist" });
         }
-        const success = await bcrypt.compare(
-            password,
-            users.rows[0].hashed_password
-        );
+        const success = await bcrypt.compare(password, user.hashedPassword);
         const token = jwt.sign({ email }, secret, { expiresIn: "1hr" });
         if (success) {
-            res.json({ email: users.rows[0].email, token });
+            res.json({ email: user.email, token });
         } else {
             res.json({ detail: "Login failed" });
         }

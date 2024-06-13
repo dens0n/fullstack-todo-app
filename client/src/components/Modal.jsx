@@ -13,18 +13,16 @@ export default function Modal({ mode, setShowModal, task, getData }) {
     const postData = async (e) => {
         e.preventDefault();
         try {
-            const response = await fetch(
-                `${import.meta.env.VITE_SERVER_URL}/todos/`,
-                {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify(data),
-                }
-            );
+            const response = await fetch("http://localhost:8000/todos", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(data),
+            });
             if (response.status === 200) {
                 console.log("Lagt till en todo");
                 setShowModal(false);
                 getData();
+            } else {
             }
         } catch (err) {
             console.log(err);
@@ -35,7 +33,7 @@ export default function Modal({ mode, setShowModal, task, getData }) {
         e.preventDefault();
         try {
             const response = await fetch(
-                `${import.meta.env.VITE_SERVER_URL}/todos/${task.id}`,
+                `http://localhost:8000/todos/${task.id}`,
                 {
                     method: "PUT",
                     headers: { "Content-type": "application/json" },
@@ -54,7 +52,7 @@ export default function Modal({ mode, setShowModal, task, getData }) {
         const { name, value } = e.target;
         setData((data) => ({
             ...data,
-            [name]: value,
+            [name]: name === "progress" ? Number(value) : value,
         }));
     };
     return (
@@ -85,7 +83,7 @@ export default function Modal({ mode, setShowModal, task, getData }) {
                         min={0}
                         max={100}
                         name="progress"
-                        value={data.progress}
+                        value={Number(data.progress)}
                         onChange={handleChange}
                     />
                     <input
