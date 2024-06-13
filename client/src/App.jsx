@@ -38,8 +38,10 @@ function App() {
             {!authToken && <Auth />}
             {authToken && (
                 <>
-                    <ListHeader listName={"Todo App"} getData={getData} />
-                    <p className="user-email"> Hello {userEmail}</p>
+                    <ListHeader
+                        listName={`${userEmail}'s ToDo App`}
+                        getData={getData}
+                    />
                     {sortedTasks?.map((task) => (
                         <ListItem key={task.id} task={task} getData={getData} />
                     ))}

@@ -6,7 +6,7 @@ export default function Modal({ mode, setShowModal, task, getData }) {
     const [data, setData] = useState({
         user_email: editMode ? task.user_email : cookies.Email,
         title: editMode ? task.title : "",
-        progress: editMode ? task.progress : 50,
+        progress: editMode ? task.progress : 0,
         date: editMode ? task.date : new Date(),
     });
 
