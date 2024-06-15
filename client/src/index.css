@@ -17,13 +17,13 @@ body {
     margin: 0;
     padding: 0;
     height: 100vh;
-    z-index: -10;
     background-color: var(--background-color);
     display: flex;
     justify-content: center;
     align-items: center;
     font-family: "Trebuchet MS", Arial, sans-serif;
     color: var(--primary-text-color);
+    position: relative; /* Lägg till position relative för att hantera z-index korrekt */
 }
 
 .app {
@@ -31,6 +31,17 @@ body {
     border-radius: 16px;
     padding: 10px;
     width: 800px;
+    position: relative; /* Lägg till position relative för att hantera z-index korrekt */
+    z-index: 1; /* Sätt z-index till 1 för att ligga över Spline */
+}
+
+.spline {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 0; /* Sätt z-index till 0 för att ligga under appen */
 }
 
 .button-container,
@@ -48,15 +59,6 @@ body {
     background-color: transparent;
     color: var(--primary-text-color);
     border: 1.5px solid var(--border-color);
-}
-
-.spline {
-    position: absolute;
-    left: 0;
-    top: 0;
-    width: 100vw;
-    height: 100vh;
-    z-index: -5;
 }
 
 .edit {
@@ -131,7 +133,7 @@ input [type="submit"] {
 }
 
 .overlay {
-    position: absolute;
+    position: fixed;
     left: 0;
     top: 0;
     width: 100vw;
@@ -140,10 +142,10 @@ input [type="submit"] {
     display: flex;
     justify-content: center;
     align-items: center;
+    z-index: 2;
 }
 
 .modal {
-    z-index: 10;
     width: 500px;
     background-color: var(--card-background-color);
     padding: 40px;

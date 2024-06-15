@@ -1,4 +1,3 @@
-
 import { useEffect, useState } from "react";
 import ListHeader from "./components/ListHeader";
 import ListItem from "./components/ListItem";
@@ -42,13 +41,13 @@ function App() {
         }
     });
 
-   /*  const sortedTasks = tasks?.sort((a, b) => a.progress - b.progress); */
+    /*  const sortedTasks = tasks?.sort((a, b) => a.progress - b.progress); */
 
     return (
         <>
             <Spline
                 className="spline"
-                scene="https://prod.spline.design/mres2T5GO1JECHYx/scene.splinecode"
+                scene="https://prod.spline.design/HPjiUiAv8Ufbl4xq/scene.splinecode" 
             />
             <div
                 className="app"
