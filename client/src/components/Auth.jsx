@@ -1,5 +1,6 @@
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useCookies } from "react-cookie";
+import { gsap } from "gsap";
 
 export default function Auth() {
     const [cookies, setCookie, removeCookie] = useCookies(null);
@@ -9,6 +10,20 @@ export default function Auth() {
     const [confirmPassword, setConfirmPassword] = useState(null);
     const [error, setError] = useState(null);
 
+    const pillRef = useRef(null);
+    const loginRef = useRef(null);
+    const signupRef = useRef(null);
+
+    useEffect(() => {
+        const target = isLogIn ? loginRef.current : signupRef.current;
+        gsap.to(pillRef.current, {
+            x: target.offsetLeft,
+            width: target.offsetWidth,
+            duration: 0.35,
+            ease: "power2.out"
+        });
+    }, [isLogIn]);
+
     const viewLogin = (status) => {
         setError(null);
         setIsLogIn(status);
@@ -17,7 +32,7 @@ export default function Auth() {
     const handleSubmit = async (e, endpoint) => {
         e.preventDefault();
         if (!isLogIn && password !== confirmPassword) {
-            setError("Passwords dont match");
+            setError("Passwords don't match");
             return;
         }
         const response = await fetch(
@@ -37,6 +52,7 @@ export default function Auth() {
             window.location.reload();
         }
     };
+
     return (
         <div className="auth-container">
             <div className="auth-container-box">
@@ -69,26 +85,15 @@ export default function Auth() {
                     {error && <p>{error}</p>}
                 </form>
                 <div className="auth-options">
-                    <button
-                        onClick={() => viewLogin(false)}
-                        style={{
-                            backgroundColor: isLogIn
-                                ? "rgb(255,255,255)"
-                                : "rgb(188,188,188)",
-                        }}
-                    >
-                        Sign up
-                    </button>
-                    <button
-                        onClick={() => viewLogin(true)}
-                        style={{
-                            backgroundColor: !isLogIn
-                                ? "rgb(255,255,255)"
-                                : "rgb(188,188,188)",
-                        }}
-                    >
-                        Log in
-                    </button>
+                    <ul className="auth-options-list">
+                        <div ref={pillRef} className="pill" />
+                        <li ref={loginRef} onClick={() => viewLogin(true)} className={isLogIn ? "active" : ""}>
+                            Log in
+                        </li>
+                        <li ref={signupRef} onClick={() => viewLogin(false)} className={!isLogIn ? "active" : ""}>
+                            Sign up
+                        </li>
+                    </ul>
                 </div>
             </div>
         </div>

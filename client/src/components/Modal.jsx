@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useCookies } from "react-cookie";
-export default function Modal({ mode, setShowModal, task, getData }) {
+export default function Modal({ mode, setShowModal, task, getData, progress }) {
     const [cookies, setCookie, removeCookie] = useCookies(null);
     const editMode = mode === "edit" ? true : false;
     const [data, setData] = useState({
@@ -59,7 +59,7 @@ export default function Modal({ mode, setShowModal, task, getData }) {
         <div className="overlay">
             <div className="modal">
                 <div className="form-title-container">
-                    <h3>Let's {mode} you task</h3>
+                    <h3>Let's {mode} your task</h3>
                     <button onClick={() => setShowModal(false)}>X</button>
                 </div>
                 <form>
@@ -73,7 +73,7 @@ export default function Modal({ mode, setShowModal, task, getData }) {
                         onChange={handleChange}
                     />
                     <br />
-                    <label htmlFor="range">
+                    {/* <label htmlFor="range">
                         Drag to select current progress
                     </label>
                     <input
@@ -85,7 +85,7 @@ export default function Modal({ mode, setShowModal, task, getData }) {
                         name="progress"
                         value={Number(data.progress)}
                         onChange={handleChange}
-                    />
+                    /> */}
                     <input
                         className={mode}
                         type="submit"
