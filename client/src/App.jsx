@@ -54,7 +54,7 @@ function App() {
                 style={{
                     backgroundColor: !authToken
                         ? "transparent"
-                        : "rgba(132, 132, 132, 0.2)",
+                        : "rgba(132, 132, 132, 0.5)",
                 }}
             >
                 {!authToken && <Auth />}
