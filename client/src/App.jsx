@@ -13,7 +13,14 @@ function App() {
     const getData = async () => {
         try {
             const res = await fetch(
-                `${import.meta.env.VITE_SERVER_URL}/todos/${userEmail}`
+                `${import.meta.env.VITE_SERVER_URL}/todos/${userEmail}`,
+                {
+                    method: "GET",
+                    headers: {
+                        "Content-Type": "application/json",
+                        Authorization: `Bearer ${authToken}`,
+                    },
+                }
             );
             const json = await res.json();
             setTasks(json);
@@ -45,10 +52,10 @@ function App() {
 
     return (
         <>
-            <Spline
+            {/*  <Spline
                 className="spline"
                 scene="https://prod.spline.design/HPjiUiAv8Ufbl4xq/scene.splinecode" 
-            />
+            /> */}
             <div
                 className="app"
                 style={{

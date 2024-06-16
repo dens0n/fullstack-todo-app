@@ -35,21 +35,31 @@ export default function Auth() {
             setError("Passwords don't match");
             return;
         }
-        const response = await fetch(
-            `${import.meta.env.VITE_SERVER_URL}/${endpoint}`,
-            {
+        try {
+            const response = await fetch(`http://localhost:8000/${endpoint}`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ email, password }),
+            });
+    
+            const contentType = response.headers.get("content-type");
+            let data;
+            if (contentType && contentType.includes("application/json")) {
+                data = await response.json();
+            } else {
+                const text = await response.text();
+                throw new Error(text);
             }
-        );
-        const data = await response.json();
-        if (data.detail) {
-            setError(data.detail);
-        } else {
-            setCookie("Email", data.email);
-            setCookie("AuthToken", data.token);
-            window.location.reload();
+    
+            if (data.detail) {
+                setError(data.detail);
+            } else {
+                setCookie("Email", data.email);
+                setCookie("AuthToken", data.token);
+                window.location.reload();
+            }
+        } catch (error) {
+            setError(error.message);
         }
     };
 

@@ -1,8 +1,10 @@
 import { useState } from "react";
+import { useCookies } from "react-cookie";
 import TickIcon from "./TickIcon";
 import ProgressBar from "./ProgressBar";
 import Modal from "./Modal";
 export default function ListItem({ task, getData }) {
+    const [cookies, setCookie, removeCookie] = useCookies(null);
     const [showModal, setShowModal] = useState(false);
     const [progress, setProgress] = useState({
         id: task.id,
@@ -28,7 +30,10 @@ export default function ListItem({ task, getData }) {
                 `http://localhost:8000/todos/${updatedProgress.id}`,
                 {
                     method: "PUT",
-                    headers: { "Content-type": "application/json" },
+                    headers: {
+                        "Content-Type": "application/json",
+                        Authorization: `Bearer ${cookies.AuthToken}`,
+                    },
                     body: JSON.stringify(updatedProgress),
                 }
             );
@@ -46,6 +51,10 @@ export default function ListItem({ task, getData }) {
                 `${import.meta.env.VITE_SERVER_URL}/todos/${task.id}`,
                 {
                     method: "DELETE",
+                    headers: {
+                        "Content-Type": "application/json",
+                        Authorization: `Bearer ${cookies.AuthToken}`,
+                    },
                 }
             );
             if (response.status === 200) {

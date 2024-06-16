@@ -10,15 +10,15 @@ const {
 //CRUD
 
 // Get users todos
-router.get("/todos/:userEmail", getTodos);
+router.get("/:userEmail", getTodos);
 
 //CREATE a todo
-router.post("/todos", createTodo);
+router.post("/", createTodo);
 
 //EDIT a todo
-router.put("/todos/:id", editTodo);
+router.put("/:id", editTodo);
 
 // DELETE a todo
-router.delete("/todos/:id", deleteTodo);
+router.delete("/:id", deleteTodo);
 
 module.exports = router;

@@ -10,12 +10,16 @@ export default function Modal({ mode, setShowModal, task, getData, progress }) {
         date: editMode ? task.date : new Date(),
     });
 
+    console.log(cookies.AuthToken);
     const postData = async (e) => {
         e.preventDefault();
         try {
             const response = await fetch("http://localhost:8000/todos", {
                 method: "POST",
-                headers: { "Content-Type": "application/json" },
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${cookies.AuthToken}`,
+                },
                 body: JSON.stringify(data),
             });
             if (response.status === 200) {
@@ -36,7 +40,10 @@ export default function Modal({ mode, setShowModal, task, getData, progress }) {
                 `http://localhost:8000/todos/${task.id}`,
                 {
                     method: "PUT",
-                    headers: { "Content-type": "application/json" },
+                    headers: {
+                        "Content-Type": "application/json",
+                        Authorization: `Bearer ${cookies.AuthToken}`,
+                    },
                     body: JSON.stringify(data),
                 }
             );
