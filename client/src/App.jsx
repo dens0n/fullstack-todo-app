@@ -51,10 +51,10 @@ function App() {
 
     return (
         <>
-            {/*  <Spline
+             <Spline
                 className="spline"
                 scene="https://prod.spline.design/HPjiUiAv8Ufbl4xq/scene.splinecode" 
-            /> */}
+            />
             <div
                 className="app"
                 style={{
