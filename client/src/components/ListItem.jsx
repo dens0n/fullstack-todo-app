@@ -47,7 +47,7 @@ export default function ListItem({ task, getData }) {
     const deleteItem = async () => {
         try {
             const response = await fetch(
-                `${import.meta.env.VITE_SERVER_URL}/todos/${task.id}`,
+                `http://localhost:8000/todos/${task.id}`,
                 {
                     method: "DELETE",
                     headers: {

@@ -13,7 +13,7 @@ function App() {
     const getData = async () => {
         try {
             const res = await fetch(
-                `${import.meta.env.VITE_SERVER_URL}/todos/${userEmail}`,
+                `http://localhost:8000/todos/${userEmail}`,
                 {
                     method: "GET",
                     headers: {
