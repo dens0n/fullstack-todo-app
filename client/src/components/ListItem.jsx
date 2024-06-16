@@ -24,7 +24,6 @@ export default function ListItem({ task, getData }) {
     };
 
     const editData = async (updatedProgress) => {
-        console.log(updatedProgress);
         try {
             const response = await fetch(
                 `http://localhost:8000/todos/${updatedProgress.id}`,

@@ -35,7 +35,6 @@ function App() {
         }
     }, []);
 
-    console.log(tasks);
 
     const sortedTasks = tasks?.sort((a, b) => {
         if (a.progress > 95 && b.progress <= 95) {

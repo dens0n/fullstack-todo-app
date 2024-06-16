@@ -10,7 +10,6 @@ export default function Modal({ mode, setShowModal, task, getData, progress }) {
         date: editMode ? task.date : new Date(),
     });
 
-    console.log(cookies.AuthToken);
     const postData = async (e) => {
         e.preventDefault();
         try {
